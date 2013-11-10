@@ -16,3 +16,9 @@ tmp
 .yardoc
 _yardoc
 doc/
+
+
+############
+# ignore sqlite dbs (e.g. pluto.db etc.)
+
+*.db
