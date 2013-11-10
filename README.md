@@ -4,6 +4,15 @@ misc feedreader utility tools
 
 
 
+## Alternatives
+
+### Feed Auto Discovery
+
+- `pauldix/truffle-hog` - [`truffle-hog.rb`](https://github.com/pauldix/truffle-hog/blob/master/lib/truffle-hog.rb)
+- `damog/feedbag` - [`feedbag.rb`](https://github.com/damog/feedbag/blob/master/lib/feedbag.rb)
+- `alx/rfeedfinder` - [`rfeedfinder.rb`](https://github.com/alx/rfeedfinder/blob/master/lib/rfeedfinder.rb)
+
+
 
 ## License
 
