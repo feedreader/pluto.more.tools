@@ -32,8 +32,77 @@ end
 o = Report.new
 
 
-Feed.order(:id).each do |feed|
+
+def find_title_tag( html )
+  match_data = html.match( /<title[^>]*>.*<\/title>/im )
+
+  # note: regex match if no match returns match_data == nil
   
+  match_data ? match_data[0] : nil
+end
+
+
+def find_feed_link_tags( html )
+
+  links = []   # returns array of strings or empty array
+
+  html.scan( /<link[^>]+alternate[^>]+>/im ) do |link|
+      # note: link is "plain" matched string (not regex match data array)
+      # from ruby string docu:
+      # - If the pattern contains no groups, each individual result
+      #  consists of the matched string, 
+      # note: different w/ capture groups ()!!
+
+      # note: check if type is
+      #   text/xml    - possible? allow for now
+      #   application/rss+xml
+      #   application/atom+xml
+      #   application/rdf+xml
+      #  
+      #  skip  alternate stylesheet  for example, w/ type  text/css etc.
+
+      ## for now just check if type include xml or rss or atom or rdf
+      if link =~ /type=['"][^'"]+(rdf|rss|atom|xml)/i
+        links << link.dup 
+      else
+        puts "!!! skipping candidate link (alternate) |>#{link}<| - type expected w/ rdf|rss|atom|xml"
+      end
+  end
+
+  links
+end
+
+def find_more_feed_link_tags( html )
+  links = []
+
+  html.scan( /<a[^>]+href[^>]+>/im ) do |link|
+
+    ## check "plain" anchor <a> links
+    #   e.g.
+    #   <a href="/feed.xml">news</a>
+    #   <a href="/atom.xml">news</a>
+    #   <a href="/rss.xml">news</a>
+    #   <a href="/rss2.xml">news</a>
+    #   <a href="/news.rss">news</a>
+    #   <a href="/news.atom">news</a>
+    #   <a href="/blog.atom">news</a>
+
+    ## for now just check if type include xml or rss or atom or rdf
+    if link =~ /href=['"][^'"]*(feed\.xml|atom\.xml|rss\.xml|rss2\.xml|news\.rss|news\.atom|blog\.atom)/i
+        links << link.dup 
+    else
+        puts "!!! skipping candidate link (anchor) |>#{link}<|"
+    end
+  end
+  links
+end
+
+
+
+
+
+Feed.order(:id).each do |feed|
+
   o.puts "====== #{feed.url} ======"
   o.puts ""
 
@@ -46,13 +115,10 @@ Feed.order(:id).each do |feed|
     o.puts "title -- >|#{feed.title}|<"
 
     ## check for title
-    md = html.match( /<title.*?>.*<\/title>/im )
-    
-    ## report - no title
-    ##       or  title do not match
+    title = find_title_tag( html )
 
-    if md
-      o.puts "      -- >|#{md[0]}|<"
+    if title
+      o.puts "      -- >|#{title}|<"
     else
       o.puts "!!! title missing"
     end
@@ -63,30 +129,28 @@ Feed.order(:id).each do |feed|
 
     o.puts "feed -- >|#{feed.feed_url}|<"
 
-    link_count=0
+    links = find_feed_link_tags( html )
 
-    html.scan( /<link[^>]+alternate[^>]+>/im ) do |link|
-      # note: link is "plain" matched string (not regex match data array)
-      # from ruby string docu:
-      # - If the pattern contains no groups, each individual result
-      #  consists of the matched string, 
-      # note: different w/ capture groups ()!!
-
-      link_count += 1
-      ## puts "#{link.class.name}"
-      o.puts "     [#{link_count}] >|#{link}|<"
+    links.each_with_index do |link,index|
+      o.puts "     [#{index+1}] >|#{link}|<"
     end
 
     ### report - no link
     #         or more than one link
     #         or link do not match
 
-    if link_count == 0
+    if links.size == 0
       o.puts "!!! link (alternate/auto discovery) missing"
     end
-    
-    if link_count > 1
+
+    if links.size > 1
       o.puts "!!! more than one link (alternate/auto discovery) found"
+    end
+
+    ## check for non-auto discovery plain links using a heuristic (e.g. atom.xml, etc.)
+    links = find_more_feed_link_tags( html )
+    links.each_with_index do |link,index|
+      o.puts "     ++ [#{index+1}] >|#{link}|<"
     end
 
 
