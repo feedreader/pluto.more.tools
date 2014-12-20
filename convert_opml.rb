@@ -42,13 +42,11 @@ def fetch_opml( opml_str )
 end
 
 
-pp ARGV
-
 
 # 'http://planet.mozilla.org/opml.xml'
 # 'http://blogs.openstreetmap.org/opml.xml'
-
-opml_str = ARGV[1] || 'http://blogs.openstreetmap.org/opml.xml'
+# Note: Ruby's first program argument is zero e.g. ARGV[0]
+opml_str = ARGV[0] || 'http://blogs.openstreetmap.org/opml.xml'
 
 xml = fetch_opml( opml_str ) 
 planet = OpmlBuilder.build( xml )
