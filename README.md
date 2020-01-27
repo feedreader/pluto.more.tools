@@ -1,6 +1,6 @@
-# pluto.tools
+# pluto.more.tools
 
-misc feedreader utility tools
+misc feedreader utility tools plus planet notes, links and more
 
 
 
@@ -11,6 +11,16 @@ misc feedreader utility tools
 - `pauldix/truffle-hog` - [`truffle-hog.rb`](https://github.com/pauldix/truffle-hog/blob/master/lib/truffle-hog.rb)
 - `damog/feedbag` - [`feedbag.rb`](https://github.com/damog/feedbag/blob/master/lib/feedbag.rb)
 - `alx/rfeedfinder` - [`rfeedfinder.rb`](https://github.com/alx/rfeedfinder/blob/master/lib/rfeedfinder.rb)
+
+
+
+## Planet Notes, Links and More
+
+
+- [Planets](PLANETS.md)
+- [Alternatives](ALTERNATIVES.md) - Feed Aggregators, Feed Parsers/Normalizers, Feed Filters/Sanitizers
+- [Formats](FORMATS.md) - Atom Syndication, Really Simple Syndication (RSS) 2.0
+- [Links](LINKS.md)
 
 
 
