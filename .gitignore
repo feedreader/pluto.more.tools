@@ -19,11 +19,7 @@ doc/
 
 
 ############
-# ignore sqlite dbs (e.g. pluto.db etc.)
+# ignore all sqlite dbs (e.g. pluto.db etc.)
 
 *.db
 
-################
-# ignore convert_opml std output
-
-planet.ini
