@@ -1,6 +1,6 @@
 #######################
 #  to run type:
-#    $ ruby sandbox/parse_feed_01.rb
+#    $ ruby ./parse_feed.rb
 
 
 
